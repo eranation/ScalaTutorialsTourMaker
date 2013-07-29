@@ -1,0 +1,74 @@
+title,code,text,links
+Scalculator,1 + 2,"Let's start with some basic arithmetic operations.
+
+Just like most languages, simple arithmetic operations are part of the language.
+
+Play with the editor on the left, type things like
+
+`2 * 3`
+
+`10 / 2`
+
+or `20 / (3 + 7)`
+
+<div class=""alert alert-info"">
+    <strong>Tip:</strong> to execute the code, click the green <button value=""Run"" disabled=""disabled"" name=""run"" type=""submit"" class=""btn btn-success"">
+    <i class=""icon-play icon-white""></i>
+</button> button, <br>or press <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+</div>",
+Operators are methods,(1).+(2),"In Scala, primitives are represented as objects. (Although after compilation they are using Java's primitives when possible for performance).
+
+Since they are objects, operators are simply method calls!
+
+So `1 + 2` is simply calling a method named `+` on the object `1` (an `Int` literal)
+
+e.g. 
+
+`1 + 2` is actually: `(1).+(2)`
+
+Scala has precedence for operator-like methods (that will be discuessed later) to support correct arithmetic operations. 
+
+This notation is called ""operator notation"" or ""infix notation"" is not limited just to arithmetic operations, but this will be explained later.","- text: Style Guide - Method Invocation
+  url: http://docs.scala-lang.org/style/method-invocation.html
+- text: Scala Reference - 6.12.3 Infix Operations
+  url: http://www.scala-lang.org/docu/files/ScalaReference.pdf
+- text: Scala Operators
+  url: http://www.scala-lang.org/node/118
+"
+Variables,"var x = 1 + 2
+println(x)
+x = 3 * 4
+println(x)","Variables are declared using the `var` keyword
+
+In many cases, the type information can be omitted, thanks to Scala's type inference 
+
+To declare a variable with ecplicit type, put the type after the variable name following a colon `:`
+
+e.g. 
+
+```scala
+var x: Int = 1 + 2
+```
+
+<div class=""alert alert-info"">
+<strong>Tip:</strong> Adding explicit type is a matter of preference, in one hand it helps ""documenting"" your code, on the other hand it might make it more ""cluttered"". Use judgement, e.g. add explicit types to public interfaces and APIs, and skip it for internal implementation.
+</div>",
+Final Variables,"val x = 1 + 2 //val instead of var
+println(x)
+x = 3 * 4 //error: reassignment to val
+println(x)","Final variables are declared using the `val` keyword (a final variable is a variable that can't be reassigned)
+
+The code on the left looks almost exactly like in the previous step, with one small change. The `var` was changed to `val`. 
+
+Try to run the code on the left, the compiler should complain on line 3, since we are trying to reassign `x` which is a `val`. 
+
+<div class=""well""><h5><i class=""icon icon-pencil""></i> Exercise</h5> 
+
+Edit the code on the left, so it will run (either change the <code>val</code> back to <code>var</code>, remove the reassignment to <code>x</code> or assign the result of the expression in line 3 to a different <code>val</code> or <code>var</code>)
+
+</div>
+
+<div class=""alert alert-warn"">
+<strong>Note:</strong> Prefer using `val` over `var` (and immutable objects over mutalbe ones). There are many benefits that are out of the scope of this small tour.
+</div>
+",

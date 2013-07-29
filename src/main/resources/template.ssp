@@ -1,0 +1,25 @@
+<%@ var title:String %>
+<%@ var code:String %>
+<%@ var text:String %>
+<%@ var pageNumber:Int %>
+<%@ var isLast:Boolean %>
+<%@ var nextPage:String = null %>
+<%@ var prevPage:String = null %>
+<%@ var links:String = null %>
+---
+layout: tour
+title: "${title}"
+description: "Scala language tour"
+pageNumber: ${pageNumber}
+isLast: ${isLast}
+group: tour
+nextPage: ${nextPage}
+prevPage: ${prevPage}
+links:
+${unescape(links)}
+code:
+  |
+${unescape(code.replaceAll("(.*)","  $1"))}
+---
+
+${unescape(text)}
