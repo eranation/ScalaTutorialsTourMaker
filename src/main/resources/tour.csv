@@ -26,15 +26,14 @@ e.g.
 
 `1 + 2` is actually: `(1).+(2)`
 
-Scala has precedence for operator-like methods (that will be discuessed later) to support correct arithmetic operations. 
+Scala has precedence for operator-like methods (that will be discussed later) to support correct arithmetic operations. 
 
 This notation is called ""operator notation"" or ""infix notation"" is not limited just to arithmetic operations, but this will be explained later.","- text: Style Guide - Method Invocation
   url: http://docs.scala-lang.org/style/method-invocation.html
 - text: Scala Reference - 6.12.3 Infix Operations
   url: http://www.scala-lang.org/docu/files/ScalaReference.pdf
 - text: Scala Operators
-  url: http://www.scala-lang.org/node/118
-"
+  url: http://w"
 Variables,"var x = 1 + 2
 println(x)
 x = 3 * 4
@@ -42,7 +41,7 @@ println(x)","Variables are declared using the `var` keyword
 
 In many cases, the type information can be omitted, thanks to Scala's type inference 
 
-To declare a variable with ecplicit type, put the type after the variable name following a colon `:`
+To declare a variable with explicit type, put the type after the variable name following a colon `:`
 
 e.g. 
 
@@ -51,7 +50,7 @@ var x: Int = 1 + 2
 ```
 
 <div class=""alert alert-info"">
-<strong>Tip:</strong> Adding explicit type is a matter of preference, in one hand it helps ""documenting"" your code, on the other hand it might make it more ""cluttered"". Use judgement, e.g. add explicit types to public interfaces and APIs, and skip it for internal implementation.
+<strong>Tip:</strong> Adding explicit type is a matter of preference, in one hand it helps ""documenting"" your code, on the other hand it might make it more ""cluttered"". Use judgment, e.g. add explicit types to public interfaces and APIs, and skip it for internal implementation.
 </div>",
 Final Variables,"val x = 1 + 2 //val instead of var
 println(x)
@@ -69,6 +68,212 @@ Edit the code on the left, so it will run (either change the <code>val</code> ba
 </div>
 
 <div class=""alert alert-warn"">
-<strong>Note:</strong> Prefer using `val` over `var` (and immutable objects over mutalbe ones). There are many benefits that are out of the scope of this small tour.
+<strong>Note:</strong> Prefer using `val` over `var` (and immutable objects over mutable ones). There are many benefits that are out of the scope of this small tour.
 </div>
 ",
+Printing values,"println(""Hello World"")","
+Scala has a ""shortcut"" to Java's `System.out.println` (as well as `print`, `printf` etc.)
+
+They are all defined in a class that is imported by default (`scala.Predef`)
+","- text: scala.Predef
+  url: http://www.scala-lang.org/api/current/index.html#scala.Predef$"
+String interpolation,"import math._
+val Tau = Pi*2
+println(s""Happy $Tau Day"")","
+From Scala 2.10, string interpolation is supported. 
+
+For complex expressions add curly braces, e.g. 
+
+```scala
+s""Two times three: ${2 * 3}""
+```","- text: String interpolation in Scala
+  url: http://docs.scala-lang.org/overviews/core/string-interpolation.html
+- text: What is this 'Tau' thing?
+  url: http://tauday.com"
+String formatting,"//java.lang.* is imported implicitly by default 
+//(including java.lang.Math
+printf(""Now you have %.16f problems."", Math.nextAfter(2.0, 3))",printf works as well... ,"- text: Printf cheat sheet
+  url: http://alvinalexander.com/programming/printf-format-cheat-sheet
+"
+Method definition,"def add(x:Int, y:Int):Int = {
+  return x + y
+}
+println(add(42,13))","- In Scala methods are defined using `def` 
+- Methods that return a value must have an equal sign before the body of the method 
+- Methods that have either a return statement or are recursive must declare a return type
+",
+Method definition 2,"def add(x:Int, y:Int) = { //result type is inferred 
+  x + y //""return"" keyword is optional
+}
+println(add(42,13))","- `return` keyword is optional
+- Return type is inferred (for non recursive methods and methods that don't have an explicit `return` value)
+",
+Method definition 3,"//Curly braces are optional on single line blocks
+def add(x:Int, y:Int) = x + y
+println(add(42,13))","Curly braces are optional on single line method bodies.
+",
+Anonymous Functions,"//a method that requires a function as a parameter
+//the function's type is (Int,Int) => Int
+//e.g. maps from 2 Ints to an Int
+def doWithOneAndTwo(f: (Int, Int) => Int) = {
+  f(1, 2)
+}
+
+//Explicit type declaration
+val call1 = doWithOneAndTwo((x: Int, y: Int) => x + y)
+
+//The compiler expects 2 ints so x and y types are inferred
+val call2 = doWithOneAndTwo((x, y) => x + y)
+
+//Even more concise syntax
+val call3 = doWithOneAndTwo(_ + _)
+
+println(call1, call2, call3)","Anonymous functions in Scala are of the following forms:
+
+```scala
+(x: Int) => x * x //type is: Int => Int, e.g. gets an Int and returns an Int
+(x: Int, y: Int) => x + y //type is: (Int, Int) => Int, e.g. gets 2 Ints and returns an Int
+```
+
+Which is basically a ""syntactic sugar"" for this form:
+
+```scala
+new Function1[Int ,Int] {
+  def apply(x: Int): Int = x * x
+}
+
+new Function2[Int ,Int ,Int] {
+  def apply(x: Int, y: Int): Int = x + y
+}
+```
+
+### Type 
+
+The *type* of the 2nd anonymous function is `(Int, Int) => Int` and reads: ""A function that map from two integers (`Int, Int`) to (`=>`) an integer (`Int`)""
+ 
+The method `doWithOneAndTwo` expects a parameter of that type, so we can pass `(x ,y) => x + y` as a parameter.
+
+### Parameter type inference
+
+Note that we were able to drop the type declarations for x and y here, becase the compiler already ""knows"" that `doWithOneAndTwo` expects a function that gets 2 Int parameters, therefore we can omit the type information for the parameters x and y in the second call in the example on the left.
+
+### Shorter syntax
+Furthermore, there is even a shorter syntax for anonymous functions, (with a limitation that each variable is used exactly once in the body of the function). A place holder is used `_` to replace each parameter, the first occurrence of `_` stands for the first parameter, the second for the second parameter and so forth. ","- text: More on anonymous functions 
+  url: http://www.scala-lang.org/node/133"
+Anonymous Functions 2,"def add1(x:Int, y:Int) = x + y //method
+val add2 = (x:Int, y:Int) => x + y //anonymous function
+val add3:(Int,Int)=>Int = _ + _ //alternate way
+val add4 = (_ + _):(Int,Int)=>Int //alternate way, rare 
+  
+println(add0(42,13))
+println(add1(42,13))
+println(add2(42,13))
+println(add3(42,13))
+","- The first example is a method definition as we've seen before
+- The second, is like the previous slide, only assigned to a val, this is very, very roughly like the difference between 
+
+  ````javascript
+  function foo(x, y) { 
+      return x + y; 
+  }
+  ```
+
+  and 
+
+  ```javascript
+  var foo = function(x, y) { 
+      return x + y; 
+  }
+  ```
+  in JavaScript.
+- The third, was briefly demonstrated in the previous slide, uses the shorter `_` placeholder syntax. However the usage on the left is rare in Scala, the `_` notation for anonymous functions is mostly useful when passing them as parameter to higher order functions (functions that recieve or return other functions)",
+Return multiple variables,"def swap(x:String, y:String) = (y, x)
+val (a,b) = swap(""hello"",""world"")
+println(a, b)",It is possible to return multiple variables using Tuples,"- text: More on Tuples
+  url: http://www.tutorialspoint.com/scala/scala_tuples.htm
+"
+Declare multiple variables,"var x, y, z = 0
+var c, python, java = false
+println(x, y, z, c, python, java)","It is possible to declare and assign multiple variables to the same value.
+
+The types of the variables in this example are inferred.",
+Assign multiple variables,"var (x, y, z, c, python, java) = (1, 2, 3, true, false, ""no!"")
+println(x, y, z, c, python, java)","Using Tuples, it is possible to assign multiple values to multiple variables (either `var` or `val`).",
+Loops using while,"//Loops using while
+
+var i, sum = 0
+while ( i < 10) {
+  sum += i
+  i+=1
+}
+println(sum)","Scala doesn't have a ""classic"" equivalent to the imperative for loop construct that exists in c, Java, etc. For imperative ""for"" like loops, use `while`.
+
+Scala doesn't support (out of the box) the `++` and `--` operators, use `+= 1` or `-= 1` for the same effect.",
+Loops using for,"//Loops using for
+var sum = 0
+for ( i <- 0 until 10) {
+  sum += i
+}
+println(sum)",For loops in Scala are powerful and deserve a separate discussion. But they can be used to mimic a c / Java like for loop as well.,"- text: More on for loops
+  url: http://www.tutorialspoint.com/scala/scala_for_loop.htm"
+Loops without loops,"//Or, neither while nor for
+(0 until 10).sum","The ""Scala"" way (or Functional way) of performing a sum of numbers.
+Many programming tasks can be written in Scala using similar concepts without the use of explicit `while` loops.",
+Conditions,"if (true) 
+  println(""no braces on a single expression"")
+
+if (1 + 1 == 2) {
+  println(""multiple"")
+  println(""statements"")
+  println(""require"")
+  println(""braces"")
+} else {
+  println(""new math is found!"")
+  println(""or your CPU went crazy"")
+}
+
+val likeEggs = false
+val breakfast =
+  if (likeEggs) ""scrambled eggs""
+  else ""Apple""
+
+println(breakfast)","Conditions are almost the same as in imperative languages such as Java or C. However one important thing to remember in Scala, is that everything is an expression, even an `if` block. 
+
+The ternary operator (`condition ? truePart : falsePart`) in Scala is simply `if (condition) truePart else falsePart`",
+Basic Pattern Matching,"val selection = ""One""
+selection match {
+  case ""One"" => println(""You selected option one!"")
+  case ""Two"" => println(""You selected option two!"")
+  case _ => println(""You selected something else: "")
+}
+","Pattern matching will be familiar to anyone coming from a Haskell background, however it might look a bit weird at first for anyone coming from imperative languages. 
+
+Pattern matching in it's most basic form, can look like an extended `switch`, with some differences:
+
+- The `match` keyword comes after the variable (`selection match` compared to `switch(selection)`
+- There is no need for `break;` 
+- There is no fall through
+- default case is `case _` (or `case x` where x can be any lower case identifier, more about it in the next slides)
+
+Pattern matching can be very powerful beyond a `switch` replacement, and will be explained in later slides","- text: More on pattern mathing
+  url: http://www.scala-lang.org/node/120"
+Lists,"val list1 = List(1, 2, 3) //Immutable list
+val list2 = 0 +: list1 //prepend, O(1)
+val list3 = 0 :: list1 //same as above
+val append = list1 :+ 4 //O(n)
+println(list1, list2, list3)
+println(append)
+println(list2 == list3) //equality is by value, not refernce
+
+val list4 = 1 to 10 //inclusive range
+val list5 = 1 until 10 //exclusive range
+
+println (list4, list5)
+
+println(List(1,2,3) ++ List(4,5,6,7)) //concatenate lists
+
+val emptyList = Nil //empty list
+
+val consList = 1 :: 2 :: 3 :: 4 :: Nil //build a list using ""cons"" operator
+
+println(consList)",Under construction,

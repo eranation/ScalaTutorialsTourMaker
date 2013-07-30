@@ -1,7 +1,6 @@
 import au.com.bytecode.opencsv.CSVReader
-import java.io.{File, FileOutputStream, InputStreamReader}
+import java.io.{File, InputStreamReader}
 import java.util._
-import javax.swing.text.AbstractDocument.Content
 import org.fusesource.scalate._
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -25,33 +24,25 @@ object ScalaTutorialTourMaker extends App {
       case (col, j) => headers(j) -> col
     }.toMap.updated("isLast", i == totalLines - 1).updated("pageNumber", i + 1)
 
-    //val output = engine.layout("template.ssp", Map("title" -> "My title"))
-
     val title: String = map("title").asInstanceOf[String] //ugly but quick
     val slug = title.toLowerCase.replaceAll(" ", "_").replaceAll("\\W", "")
-    val fileName = s"${i + 1}_tour_of_scala_$slug"
+    val fileName = s"${"%02d".format(i + 1)}_tour_of_scala_$slug"
     (fileName, map)
-    //println(output)
-    //println(s"line $i, col $j, colName $h, colValue ${l(j)}")
   }
-  for (((fileName, map), index) <- files.zipWithIndex) {
-    val outputFile = new File(props.getProperty("outputFolder"),fileName + ".md")
 
+  for (((fileName, map), index) <- files.zipWithIndex) {
+    val outputFile = new File(props.getProperty("outputFolder"), fileName + ".md")
+    println("writing to file " + outputFile.getAbsolutePath)
     printToFile(outputFile)(p => {
       val params = mutable.HashMap[String, Any]()
       params ++= map
       if (index < totalLines - 1) {
         params += "nextPage" -> (files(index + 1)._1 + ".html")
       }
-
       if (index > 0) {
         params += "prevPage" -> (files(index - 1)._1 + ".html")
       }
-
       val output = engine.layout("template.ssp", params.toMap)
-
-
-
       p.print(output)
     })
   }
