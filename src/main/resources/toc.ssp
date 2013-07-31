@@ -1,0 +1,16 @@
+<%@ val pages: List[Map[String, String]] %>
+---
+layout: page
+title: Tour of Scala
+description: "Tour TOC"
+tagline: Table of Content
+group: other
+permalink: "toc.html"
+---
+{% include JB/setup %}
+
+<ol>
+#for (item <- pages)
+  <li><a href="{{ BASE_PATH }}${item("url")}" class="active">${item("title")}</a></li>
+#end
+<ol>

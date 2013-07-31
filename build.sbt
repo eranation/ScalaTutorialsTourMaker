@@ -14,4 +14,6 @@ libraryDependencies += "net.sf.opencsv" % "opencsv" % "2.3"
 
 libraryDependencies += "org.yaml" % "snakeyaml" % "1.12"
 
+resolvers += "spray" at "http://repo.spray.io/"
 
+libraryDependencies += "io.spray" %%  "spray-json" % "1.2.5"

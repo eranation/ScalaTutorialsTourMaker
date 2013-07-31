@@ -6,13 +6,14 @@
 <%@ var nextPage:String = null %>
 <%@ var prevPage:String = null %>
 <%@ var links:String = null %>
+<%@ var group:String %>
 ---
 layout: tour
 title: "${title}"
 description: "Scala language tour"
 pageNumber: ${pageNumber}
 isLast: ${isLast}
-group: tour
+group: ${group}
 nextPage: ${nextPage}
 prevPage: ${prevPage}
 links:
