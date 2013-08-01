@@ -165,10 +165,10 @@ val add2 = (x:Int, y:Int) => x + y //anonymous function
 val add3:(Int,Int)=>Int = _ + _ //alternate way
 val add4 = (_ + _):(Int,Int)=>Int //alternate way, rare 
   
-println(add0(42,13))
 println(add1(42,13))
 println(add2(42,13))
 println(add3(42,13))
+println(add4(42,13))
 ","- The first example is a method definition as we've seen before
 - The second, is like the previous slide, only assigned to a val, this is very, very roughly like the difference between 
 
