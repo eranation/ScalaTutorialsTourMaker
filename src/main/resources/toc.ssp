@@ -11,6 +11,6 @@ permalink: "toc.html"
 
 <ol>
 #for (item <- pages)
-  <li><a href="{{ BASE_PATH }}${item("url")}" class="active">${item("title")}</a></li>
+  <li><a href="{{ BASE_PATH }}${item("url")}" class="active">${item("title")}</a> <span>${item("topic")}</span></li>
 #end
 <ol>

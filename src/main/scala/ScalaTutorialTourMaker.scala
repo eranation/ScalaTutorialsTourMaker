@@ -4,7 +4,9 @@ import java.util.Properties
 import org.fusesource.scalate._
 import scala.collection.JavaConversions._
 import scala.collection.mutable
+import scala.io.Source
 import scala.util.parsing.json.{JSONArray, JSONObject}
+
 //import spray.json._
 //import DefaultJsonProtocol._
 
@@ -18,8 +20,9 @@ object ScalaTutorialTourMaker extends App {
 
   val engine = new TemplateEngine
 
-
-  val reader = new CSVReader(new InputStreamReader(cl.getResourceAsStream("tour.csv")))
+  val src = Source.fromURL("https://docs.google.com/spreadsheet/pub?key=0AhKTWUzTtTKqdGN2OFA2eTBtaTV6YU0wNkhobEFXUGc&single=true&gid=0&output=csv")
+  //val reader = new CSVReader(new InputStreamReader(cl.getResourceAsStream("tour.csv")))
+  val reader = new CSVReader(src.reader())
 
   val headers = reader.readNext()
   val lines = reader.readAll()
@@ -64,8 +67,10 @@ object ScalaTutorialTourMaker extends App {
     }
   }
 
+  Set()
+
   val tocJSONFile = new File(outputFolder, "toc.json")
-  val filesList = files.map(i => Map("url" -> (i._1 + ".html"), "title" -> i._2)).toList
+  val filesList = files.map(i => Map("url" -> (i._1 + ".html"), "title" -> i._2, "topic" -> i._3("topic"))).toList
 
   val filesListJSON= JSONArray(filesList.map(JSONObject).toList)
 
@@ -74,8 +79,6 @@ object ScalaTutorialTourMaker extends App {
   val tocFile = new File(outputFolder, "00_toc.html")
   val output = engine.layout("toc.ssp", Map("pages" -> filesList))
   printToFile(tocFile, _.print(output))
-
-
 
 
   def printToFile(f: java.io.File, op: java.io.PrintWriter => Unit) {
